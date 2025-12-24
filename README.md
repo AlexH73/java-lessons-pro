@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+
 # JavaLessonsPro 🚀
 
 JavaLessonsPro is an educational Spring Boot project
