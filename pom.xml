@@ -12,7 +12,7 @@
     <artifactId>JavaLessonsPro</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>JavaLessonsPro</name>
-    <description>JavaLessonsPro</description>
+    <description>JavaLessonsPro - Spring Boot project for Java lessons, examples, and practice</description>
     <properties>
         <java.version>21</java.version>
     </properties>
