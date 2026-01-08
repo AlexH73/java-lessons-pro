@@ -10,13 +10,13 @@ public class Car {
     private String status;
 
     public Car(Long id, String brand, String model, int year, int mileage, int price, String status) {
-        this.brand = brand;
         this.id = id;
-        this.mileage = mileage;
+        this.brand = brand;
         this.model = model;
+        this.year = year;
+        this.mileage = mileage;
         this.price = price;
         this.status = status;
-        this.year = year;
     }
 
     public String getBrand() {
