@@ -1,7 +1,9 @@
 package de.ait.javalessonspro.model;
 
+import java.util.Objects;
+
 public class Car {
-    private Long id;
+    private final Long id;
     private String brand;
     private String model;
     private int year;
@@ -29,10 +31,6 @@ public class Car {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public int getMileage() {
@@ -75,4 +73,15 @@ public class Car {
         this.year = year;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return getYear() == car.getYear() && getMileage() == car.getMileage() && getPrice() == car.getPrice() && Objects.equals(getId(), car.getId()) && Objects.equals(getBrand(), car.getBrand()) && Objects.equals(getModel(), car.getModel()) && Objects.equals(getStatus(), car.getStatus());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getBrand(), getModel(), getYear(), getMileage(), getPrice(), getStatus());
+    }
 }
