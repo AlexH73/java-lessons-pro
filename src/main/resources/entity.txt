@@ -1,0 +1,18 @@
+JPA - как должно быть
+Hibernate - реализовывает JPA
+Spring Data JPA - слой поверх Hibernate/JPA
+
+Состояния Entity
+Transient - объект создан, но Hibernate о нем не знает
+Managed - объект загружен из БД или сохранен в БД
+Detached - объект Managed, но контекст закрыт
+Removed - объект помечен на удаление
+
+@Etity - помечаем класс как сущность
+@Table - задаем имя таблицы
+@Id - первичный ключ
+@GeneratedValue --> GenerationType.IDENTITY - автоинкремент на стороне БД
+--> SEQUENCE sequence
+--> AUTO - на усмотрение провайдера
+
+@Column nullable=false lengh=100 unigue=true
