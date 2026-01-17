@@ -1,6 +1,7 @@
 package de.ait.javalessonspro.repository;
 
 import de.ait.javalessonspro.enums.CarStatus;
+import de.ait.javalessonspro.enums.FuelType;
 import de.ait.javalessonspro.model.Car;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,9 +15,19 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Car> findByStatus(CarStatus status);
 
+    List<Car> findByColorIgnoreCase(String color);
+
+    List<Car> findByFuelType(FuelType fuelType);
+
+    List<Car> findByPriceBetween(double min, double max);
+
+    List<Car> findByHorsepowerBetween(int minHp, int maxHp);
+
     boolean existsById(@NonNull Long id);
 
-    boolean existsByBrandIgnoreCase(@NonNull String brand);
+    boolean existsByBrandIgnoreCase(String brand);
 
-    List<Car> findByPriceBetween(int min, int max);
+    boolean existsByColorIgnoreCase(String color);
+
+    boolean existsByFuelType(FuelType fuelType);
 }
