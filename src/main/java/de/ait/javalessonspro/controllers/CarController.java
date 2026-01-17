@@ -1,8 +1,11 @@
 package de.ait.javalessonspro.controllers;
 
+import de.ait.javalessonspro.enums.CarStatus;
+import de.ait.javalessonspro.enums.FuelType;
 import de.ait.javalessonspro.model.Car;
 import de.ait.javalessonspro.repository.CarRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -114,7 +117,6 @@ public class CarController {
         return ResponseEntity.ok(carRepository.save(carToUpdate));
     }
 
-
     @Operation(
             summary = "Search cars by price range",
             description = "Returns a list of cars with prices between the specified minimum and maximum values. " +
@@ -122,8 +124,67 @@ public class CarController {
     )
     @GetMapping("/by-price")
     public ResponseEntity<List<Car>> searchByPriceBetween(
-            @RequestParam int min, @RequestParam int max
+            @RequestParam double min, @RequestParam double max
     ) {
         return ResponseEntity.ok(carRepository.findByPriceBetween(min, max));
     }
+
+    @Operation(
+            summary = "Search cars by color",
+            description = "Returns a list of cars with the specified color (case-insensitive). " +
+                    "Available colors include Black, White, Silver, Blue, Red, Gray, etc. " +
+                    "Example: /api/cars/by-color?color=black"
+    )
+    @GetMapping("/by-color")
+    public ResponseEntity<List<Car>> getCarByColor(@RequestParam String color) {
+        if (!carRepository.existsByColorIgnoreCase(color)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(carRepository.findByColorIgnoreCase(color));
+    }
+
+    @Operation(
+            summary = "Search cars by fuel type",
+            description = "Returns a list of cars with the specified fuel type. " +
+                    "Available fuel types: PETROL, DIESEL, ELECTRIC, HYBRID. " +
+                    "Example: /api/cars/by-fuel?fuelType=DIESEL"
+    )
+    @GetMapping("/by-fuel")
+    public ResponseEntity<List<Car>> getCarByFuelType(@RequestParam FuelType fuelType) {
+        if (!carRepository.existsByFuelType(fuelType)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(carRepository.findByFuelType(fuelType));
+    }
+
+    @Operation(
+            summary = "Search cars by horsepower range",
+            description = "Returns a list of cars with horsepower between the specified values. " +
+                    "Example: /api/cars/by-power?minHp=150&maxHp=300"
+    )
+    @GetMapping("/by-power")
+    public ResponseEntity<List<Car>> searchByHorsepowerBetween(
+            @RequestParam @Parameter(description = "Minimum horsepower", example = "150") int minHp,
+            @RequestParam @Parameter(description = "Maximum horsepower", example = "300") int maxHp
+    ) {
+        return ResponseEntity.ok(carRepository.findByHorsepowerBetween(minHp, maxHp));
+    }
+
+    @Operation(
+            summary = "Search cars by status",
+            description = "Returns a list of cars with the specified status. " +
+                    "Available statuses: AVAILABLE, SOLD, RESERVED, IN_REPAIR. " +
+                    "Example: /api/cars/by-status?status=AVAILABLE"
+    )
+    @GetMapping("/by-status")
+    public ResponseEntity<List<Car>> getCarsByStatus(
+            @RequestParam @Parameter(description = "Status of the car", example = "AVAILABLE")
+            CarStatus status) {
+        List<Car> cars = carRepository.findByStatus(status);
+        if (cars.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cars);
+    }
+
 }
