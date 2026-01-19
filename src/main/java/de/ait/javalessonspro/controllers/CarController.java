@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.List;
 
 @Tag(name = "Car management API")
@@ -61,14 +62,36 @@ public class CarController {
 
     @Operation(
             summary = "Search cars by brand",
-            description = "Returns a list of cars filtered by brand name (case-insensitive). " +
-                    "Example: /api/cars/search?brand=BMW"
+            description = """
+        Returns a list of cars filtered by brand name. The search is case-insensitive.
+        
+        **Automatic URL normalization:**
+        - If the brand parameter contains uppercase letters (e.g., `?brand=BMW`), 
+          the endpoint returns a 301 redirect to the lowercase version (`?brand=bmw`)
+        - If already lowercase (e.g., `?brand=bmw`), returns results directly
+        
+        **Examples:**
+        - `GET /api/cars/search?brand=BMW` → 301 Redirect → `GET /api/cars/search?brand=bmw`
+        - `GET /api/cars/search?brand=bmw` → 200 OK with results
+        - `GET /api/cars/search?brand=ToYoTa` → 301 Redirect → `GET /api/cars/search?brand=toyota`
+        
+        **Note:** Brand names in the database are stored in uppercase, but the API accepts 
+        any case and normalizes to lowercase in URLs for consistency.
+        """
     )
     @GetMapping("/search")
     public ResponseEntity<List<Car>> searchCars(@RequestParam String brand) {
         if (!carRepository.existsByBrandIgnoreCase(brand)) {
             return ResponseEntity.notFound().build();
         }
+
+        if (!brand.equals(brand.toLowerCase())) {
+            return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
+                    .location(URI.create("/api/cars/search?brand=" +
+                            brand.toLowerCase()))
+                    .build();
+        }
+
         return ResponseEntity.ok(carRepository.findByBrandIgnoreCase(brand));
     }
 
