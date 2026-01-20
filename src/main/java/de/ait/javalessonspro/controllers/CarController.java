@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
+import java.time.Year;
 import java.util.List;
 
 @Tag(name = "Car management API")
@@ -131,19 +132,16 @@ public class CarController {
     )
     @PostMapping
     public ResponseEntity<Car> addCar(@RequestBody Car car) {
-        if (car.getStatus() == null) {
-            log.error("Car status is null");
+
+        if (!isValidCar(car)) {
+            log.warn("Create car failed: invalid input data");
             return ResponseEntity.badRequest().build();
         }
 
-        Car savedCar = carRepository.save(car);
-        if (savedCar == null) {
-            log.error("Car could not be saved");
-            return ResponseEntity.badRequest().build();
-        }
+        Car saved = carRepository.save(car);
+        log.info("Car created with id {}", saved.getId());
 
-        log.info("Car with id {} saved", savedCar.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCar);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @Operation(
@@ -152,6 +150,11 @@ public class CarController {
     )
     @PutMapping("/{id}")
     public ResponseEntity<Car> updateCar(@PathVariable Long id, @RequestBody Car car) {
+        if (!isValidCar(car)) {
+            log.warn("Update car failed: invalid input data, id={}", id);
+            return ResponseEntity.badRequest().build();
+        }
+
         Car carToUpdate = carRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Car with id {} not found", id);
@@ -269,6 +272,42 @@ public class CarController {
 
         log.info("Search cars by status: status='{}', found={}", status, cars.size());
         return ResponseEntity.ok(cars);
+    }
+
+    public static boolean isValidCar(Car car) {
+
+        if (car == null) return false;
+
+        // Brand
+        if (car.getBrand() == null || car.getBrand().isBlank()) return false;
+        if (car.getBrand().length() < 2 || car.getBrand().length() > 50) return false;
+
+        // Model
+        if (car.getModel() == null || car.getModel().isBlank()) return false;
+        if (car.getModel().length() > 50) return false;
+
+        // Production year
+        int currentYear = Year.now().getValue();
+        if (car.getProductionYear() < 1900 || car.getProductionYear() > currentYear) return false;
+
+        // Mileage
+        if (car.getMileage() < 0) return false;
+
+        // Price
+        if (car.getPrice() <= 0) return false;
+
+        // Horsepower
+        if (car.getHorsepower() < 1 || car.getHorsepower() > 1500) return false;
+
+        // Color
+        if (car.getColor() == null || car.getColor().isBlank()) return false;
+
+        // Enums
+        if (car.getFuelType() == null) return false;
+        if (car.getTransmission() == null) return false;
+        if (car.getStatus() == null) return false;
+
+        return true;
     }
 
 }
