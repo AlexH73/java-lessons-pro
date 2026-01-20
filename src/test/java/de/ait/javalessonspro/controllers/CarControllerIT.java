@@ -16,14 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Year;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -88,8 +85,6 @@ public class CarControllerIT {
     void testCreateNewCarShouldReturn201() throws Exception {
         Car car = buildValidCar("Audi", "A6");
 
-        carValidate(car);
-
         String jsonBody = objectMapper.writeValueAsString(car);
 
         mockMvc.perform(
@@ -152,49 +147,5 @@ public class CarControllerIT {
         assertTrue(cars.isEmpty());
 
 
-    }
-
-    public static void carValidate(Car car) {
-
-        assertNotNull(car, "Car must not be null");
-
-        // Brand
-        assertNotNull(car.getBrand(), "Brand must not be null");
-        assertFalse(car.getBrand().isBlank(), "Brand must not be blank");
-        assertTrue(car.getBrand().length() <= 50, "Brand length must be <= 50");
-        assertTrue(car.getBrand().length() >= 2, "Brand length must be >= 2");
-
-        // Model
-        assertNotNull(car.getModel(), "Model must not be null");
-        assertFalse(car.getModel().isBlank(), "Model must not be blank");
-        assertTrue(car.getModel().length() <= 50, "Model length must be <= 50");
-
-        // Production year
-        int currentYear = Year.now().getValue();
-        assertTrue(
-                car.getProductionYear() >= 1900 && car.getProductionYear() <= currentYear,
-                "Production year must be between 1900 and " + currentYear
-        );
-
-        // Mileage
-        assertTrue(car.getMileage() >= 0, "Mileage must be >= 0");
-
-        // Price
-        assertTrue(car.getPrice() > 0, "Price must be > 0");
-
-        // Horsepower
-        assertTrue(
-                car.getHorsepower() >= 1 && car.getHorsepower() <= 1500,
-                "Horsepower must be between 1 and 1500"
-        );
-
-        // Color
-        assertNotNull(car.getColor(), "Color must not be null");
-        assertFalse(car.getColor().isBlank(), "Color must not be blank");
-
-        // Enums
-        assertNotNull(car.getFuelType(), "FuelType must not be null");
-        assertNotNull(car.getTransmission(), "Transmission must not be null");
-        assertNotNull(car.getStatus(), "CarStatus must not be null");
     }
 }
