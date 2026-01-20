@@ -7,6 +7,7 @@ import de.ait.javalessonspro.repository.CarRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 @Tag(name = "Car management API")
 @RestController
 @RequestMapping("/api/cars")
+@Slf4j
 public class CarController {
 
     private final CarRepository carRepository;
@@ -46,6 +48,7 @@ public class CarController {
     )
     @GetMapping
     public ResponseEntity<List<Car>> getAllCars() {
+        log.info("Fetching all cars from the repository");
         return ResponseEntity.ok(carRepository.findAll());
     }
 
@@ -56,43 +59,55 @@ public class CarController {
     @GetMapping("/{id}")
     public ResponseEntity<Car> getCarById(@PathVariable Long id) {
         return carRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(car -> {
+                    log.info("Car with id {} found", id);
+                    return ResponseEntity.ok(car);
+                })
+                .orElseGet(() -> {
+                    log.warn("Car with id {} not found", id);
+                    return ResponseEntity.notFound().build();
+                });
     }
 
     @Operation(
             summary = "Search cars by brand",
             description = """
-        Returns a list of cars filtered by brand name. The search is case-insensitive.
-        
-        **Automatic URL normalization:**
-        - If the brand parameter contains uppercase letters (e.g., `?brand=BMW`), 
-          the endpoint returns a 301 redirect to the lowercase version (`?brand=bmw`)
-        - If already lowercase (e.g., `?brand=bmw`), returns results directly
-        
-        **Examples:**
-        - `GET /api/cars/search?brand=BMW` → 301 Redirect → `GET /api/cars/search?brand=bmw`
-        - `GET /api/cars/search?brand=bmw` → 200 OK with results
-        - `GET /api/cars/search?brand=ToYoTa` → 301 Redirect → `GET /api/cars/search?brand=toyota`
-        
-        **Note:** Brand names in the database are stored in uppercase, but the API accepts 
-        any case and normalizes to lowercase in URLs for consistency.
-        """
+                    Returns a list of cars filtered by brand name. The search is case-insensitive.
+                    
+                    **Automatic URL normalization:**
+                    - If the brand parameter contains uppercase letters (e.g., `?brand=BMW`), 
+                      the endpoint returns a 301 redirect to the lowercase version (`?brand=bmw`)
+                    - If already lowercase (e.g., `?brand=bmw`), returns results directly
+                    
+                    **Examples:**
+                    - `GET /api/cars/search?brand=BMW` → 301 Redirect → `GET /api/cars/search?brand=bmw`
+                    - `GET /api/cars/search?brand=bmw` → 200 OK with results
+                    - `GET /api/cars/search?brand=ToYoTa` → 301 Redirect → `GET /api/cars/search?brand=toyota`
+                    
+                    **Note:** Brand names in the database are stored in uppercase, but the API accepts 
+                    any case and normalizes to lowercase in URLs for consistency.
+                    """
     )
     @GetMapping("/search")
     public ResponseEntity<List<Car>> searchCars(@RequestParam String brand) {
         if (!carRepository.existsByBrandIgnoreCase(brand)) {
+            log.warn("Search cars: brand '{}' not found", brand);
             return ResponseEntity.notFound().build();
         }
 
         if (!brand.equals(brand.toLowerCase())) {
+            log.info("Search cars: redirecting brand '{}' to lowercase '{}'",
+                    brand, brand.toLowerCase());
+
             return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
                     .location(URI.create("/api/cars/search?brand=" +
                             brand.toLowerCase()))
                     .build();
         }
+        List<Car> cars = carRepository.findByBrandIgnoreCase(brand);
+        log.info("Search cars: found {} cars for brand '{}'", cars.size(), brand);
 
-        return ResponseEntity.ok(carRepository.findByBrandIgnoreCase(brand));
+        return ResponseEntity.ok(cars);
     }
 
     @Operation(
@@ -102,9 +117,11 @@ public class CarController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
         if (!carRepository.existsById(id)) {
+            log.warn("Car with id {} not found", id);
             return ResponseEntity.notFound().build();
         }
         carRepository.deleteById(id);
+        log.info("Car with id {} deleted", id);
         return ResponseEntity.noContent().build();
     }
 
@@ -114,7 +131,18 @@ public class CarController {
     )
     @PostMapping
     public ResponseEntity<Car> addCar(@RequestBody Car car) {
+        if (car.getStatus() == null) {
+            log.error("Car status is null");
+            return ResponseEntity.badRequest().build();
+        }
+
         Car savedCar = carRepository.save(car);
+        if (savedCar == null) {
+            log.error("Car could not be saved");
+            return ResponseEntity.badRequest().build();
+        }
+
+        log.info("Car with id {} saved", savedCar.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCar);
     }
 
@@ -125,10 +153,13 @@ public class CarController {
     @PutMapping("/{id}")
     public ResponseEntity<Car> updateCar(@PathVariable Long id, @RequestBody Car car) {
         Car carToUpdate = carRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Car with ID = " + id + " not found"
-                ));
+                .orElseThrow(() -> {
+                    log.warn("Car with id {} not found", id);
+                    return new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "Car with ID = " + id + " not found"
+                    );
+                });
 
         carToUpdate.setBrand(car.getBrand());
         carToUpdate.setModel(car.getModel());
@@ -136,6 +167,12 @@ public class CarController {
         carToUpdate.setMileage(car.getMileage());
         carToUpdate.setPrice(car.getPrice());
         carToUpdate.setStatus(car.getStatus());
+        carToUpdate.setColor(car.getColor());
+        carToUpdate.setHorsepower(car.getHorsepower());
+        carToUpdate.setFuelType(car.getFuelType());
+        carToUpdate.setTransmission(car.getTransmission());
+
+        log.info("Car with id {} updated", id);
 
         return ResponseEntity.ok(carRepository.save(carToUpdate));
     }
@@ -149,7 +186,10 @@ public class CarController {
     public ResponseEntity<List<Car>> searchByPriceBetween(
             @RequestParam double min, @RequestParam double max
     ) {
-        return ResponseEntity.ok(carRepository.findByPriceBetween(min, max));
+
+        List<Car> cars = carRepository.findByPriceBetween(min, max);
+        log.info("Search cars by price: min={}, max={}, found={}", min, max, cars.size());
+        return ResponseEntity.ok(cars);
     }
 
     @Operation(
@@ -161,9 +201,14 @@ public class CarController {
     @GetMapping("/by-color")
     public ResponseEntity<List<Car>> getCarByColor(@RequestParam String color) {
         if (!carRepository.existsByColorIgnoreCase(color)) {
+            log.warn("Search cars by color: color '{}' not found", color);
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(carRepository.findByColorIgnoreCase(color));
+
+        List<Car> cars = carRepository.findByColorIgnoreCase(color);
+        log.info("Search cars by color: color='{}', found={}", color, cars.size());
+
+        return ResponseEntity.ok(cars);
     }
 
     @Operation(
@@ -175,9 +220,14 @@ public class CarController {
     @GetMapping("/by-fuel")
     public ResponseEntity<List<Car>> getCarByFuelType(@RequestParam FuelType fuelType) {
         if (!carRepository.existsByFuelType(fuelType)) {
+            log.warn("Search cars by fuel type: fuelType '{}' not found", fuelType);
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(carRepository.findByFuelType(fuelType));
+
+        List<Car> cars = carRepository.findByFuelType(fuelType);
+        log.info("Search cars by fuel type: fuelType='{}', found={}", fuelType, cars.size());
+
+        return ResponseEntity.ok(cars);
     }
 
     @Operation(
@@ -190,7 +240,15 @@ public class CarController {
             @RequestParam @Parameter(description = "Minimum horsepower", example = "150") int minHp,
             @RequestParam @Parameter(description = "Maximum horsepower", example = "300") int maxHp
     ) {
-        return ResponseEntity.ok(carRepository.findByHorsepowerBetween(minHp, maxHp));
+        if (minHp < 0 || maxHp < 0 || minHp > maxHp) {
+            log.warn("Search cars by horsepower: invalid range minHp={}, maxHp={}", minHp, maxHp);
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Car> cars = carRepository.findByHorsepowerBetween(minHp, maxHp);
+        log.info("Search cars by horsepower: minHp={}, maxHp={}, found={}", minHp, maxHp, cars.size());
+
+        return ResponseEntity.ok(cars);
     }
 
     @Operation(
@@ -204,9 +262,12 @@ public class CarController {
             @RequestParam @Parameter(description = "Status of the car", example = "AVAILABLE")
             CarStatus status) {
         List<Car> cars = carRepository.findByStatus(status);
+
         if (cars.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            log.warn("Search cars by status: status '{}' not found", status);
         }
+
+        log.info("Search cars by status: status='{}', found={}", status, cars.size());
         return ResponseEntity.ok(cars);
     }
 
