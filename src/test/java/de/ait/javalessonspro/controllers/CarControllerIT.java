@@ -110,6 +110,35 @@ public class CarControllerIT {
     }
 
     @Test
+    @DisplayName("PUT /api/cars should update car in H2 return 201")
+    void testUpdateNewCarShouldReturn201() throws Exception {
+        Car car = buildValidCar("Mercedes-Benz", "E-300 de");
+
+        String jsonBody = objectMapper.writeValueAsString(car);
+
+        mockMvc.perform(
+                        post("/api/cars")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonBody))
+                .andExpect(status().isCreated());
+
+        List<Car> cars = carRepository.findAll();
+        assertEquals(1, cars.size());
+
+        assertEquals(car.getBrand(), cars.getFirst().getBrand());
+        assertEquals(car.getModel(), cars.getFirst().getModel());
+        assertEquals(car.getPrice(), cars.getFirst().getPrice());
+        assertEquals(car.getStatus(), cars.getFirst().getStatus());
+        assertEquals(car.getColor(), cars.getFirst().getColor());
+        assertEquals(car.getFuelType(), cars.getFirst().getFuelType());
+        assertEquals(car.getHorsepower(), cars.getFirst().getHorsepower());
+        assertEquals(car.getTransmission(), cars.getFirst().getTransmission());
+        assertEquals(car.getProductionYear(), cars.getFirst().getProductionYear());
+        assertEquals(car.getMileage(), cars.getFirst().getMileage());
+
+    }
+
+    @Test
     @DisplayName("GET /api/cars should return all cars")
     void testGetAllCarsShouldReturnAllCars() throws Exception {
         Car carAudi = buildValidCar("Audi", "A6");
@@ -134,6 +163,36 @@ public class CarControllerIT {
     void testCreateNewCarShouldReturn400() throws Exception {
         Car car = buildValidCar("Audi", "A6");
         car.setStatus(null);
+
+        String jsonBody = objectMapper.writeValueAsString(car);
+
+        mockMvc.perform(
+                        post("/api/cars")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonBody))
+                .andExpect(status().isBadRequest());
+
+        List<Car> cars = carRepository.findAll();
+        assertTrue(cars.isEmpty());
+
+
+    }
+
+    @Test
+    @DisplayName("PUT /api/cars should not update car in H2, invalid JSON return 400")
+    void testUpdateNewCarShouldReturn400() throws Exception {
+        Car car = buildValidCar("Mercedes-Benz", "E-300 de");
+//        car.setBrand(" ");
+//        car.setModel("");
+//        car.setProductionYear(1800);
+//        car.setMileage(-100);
+//        car.setPrice(0);
+//        car.setHorsepower(-2000);
+//        car.setStatus(null);
+//        car.setHorsepower(0);
+//        car.setColor(null);
+//        car.setFuelType(null);
+        car.setTransmission(null);
 
         String jsonBody = objectMapper.writeValueAsString(car);
 

@@ -1,5 +1,7 @@
 package de.ait.javalessonspro.controllers;
 
+import de.ait.javalessonspro.controllers.dto.ValidationErrorResponse;
+import de.ait.javalessonspro.controllers.validation.CarValidator;
 import de.ait.javalessonspro.enums.CarStatus;
 import de.ait.javalessonspro.enums.FuelType;
 import de.ait.javalessonspro.model.Car;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
-import java.time.Year;
 import java.util.List;
 
 @Tag(name = "Car management API")
@@ -131,11 +132,14 @@ public class CarController {
             description = "Creates a new car and stores it in the system."
     )
     @PostMapping
-    public ResponseEntity<Car> addCar(@RequestBody Car car) {
+    public ResponseEntity<?> addCar(@RequestBody Car car) {
 
-        if (!isValidCar(car)) {
-            log.warn("Create car failed: invalid input data");
-            return ResponseEntity.badRequest().build();
+        List<String> errors = CarValidator.validateWithErrors(car);
+
+        if (!errors.isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ValidationErrorResponse(errors));
         }
 
         Car saved = carRepository.save(car);
@@ -149,10 +153,14 @@ public class CarController {
             description = "Updates an existing car identified by its unique ID with new data."
     )
     @PutMapping("/{id}")
-    public ResponseEntity<Car> updateCar(@PathVariable Long id, @RequestBody Car car) {
-        if (!isValidCar(car)) {
-            log.warn("Update car failed: invalid input data, id={}", id);
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> updateCar(@PathVariable Long id, @RequestBody Car car) {
+        List<String> errors = CarValidator.validateWithErrors(car);
+
+        if (!errors.isEmpty()) {
+            log.warn("Update car failed: invalid data, id={}", id);
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ValidationErrorResponse(errors));
         }
 
         Car carToUpdate = carRepository.findById(id)
@@ -272,42 +280,6 @@ public class CarController {
 
         log.info("Search cars by status: status='{}', found={}", status, cars.size());
         return ResponseEntity.ok(cars);
-    }
-
-    public static boolean isValidCar(Car car) {
-
-        if (car == null) return false;
-
-        // Brand
-        if (car.getBrand() == null || car.getBrand().isBlank()) return false;
-        if (car.getBrand().length() < 2 || car.getBrand().length() > 50) return false;
-
-        // Model
-        if (car.getModel() == null || car.getModel().isBlank()) return false;
-        if (car.getModel().length() > 50) return false;
-
-        // Production year
-        int currentYear = Year.now().getValue();
-        if (car.getProductionYear() < 1900 || car.getProductionYear() > currentYear) return false;
-
-        // Mileage
-        if (car.getMileage() < 0) return false;
-
-        // Price
-        if (car.getPrice() <= 0) return false;
-
-        // Horsepower
-        if (car.getHorsepower() < 1 || car.getHorsepower() > 1500) return false;
-
-        // Color
-        if (car.getColor() == null || car.getColor().isBlank()) return false;
-
-        // Enums
-        if (car.getFuelType() == null) return false;
-        if (car.getTransmission() == null) return false;
-        if (car.getStatus() == null) return false;
-
-        return true;
     }
 
 }
