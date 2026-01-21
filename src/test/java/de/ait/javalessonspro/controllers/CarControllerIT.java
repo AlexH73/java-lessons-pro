@@ -111,7 +111,7 @@ public class CarControllerIT {
 
     @Test
     @DisplayName("PUT /api/cars should update car in H2 return 201")
-    void testUpdateNewCarShouldReturn201() throws Exception {
+    void testUpdateCarShouldReturn201() throws Exception {
         Car car = buildValidCar("Mercedes-Benz", "E-300 de");
 
         String jsonBody = objectMapper.writeValueAsString(car);
@@ -180,7 +180,7 @@ public class CarControllerIT {
 
     @Test
     @DisplayName("PUT /api/cars should not update car in H2, invalid JSON return 400")
-    void testUpdateNewCarShouldReturn400() throws Exception {
+    void testUpdateCarShouldReturn400() throws Exception {
         Car car = buildValidCar("Mercedes-Benz", "E-300 de");
 //        car.setBrand(" ");
 //        car.setModel("");
