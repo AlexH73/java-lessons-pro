@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="004-seed-test-data" author="Alexander Hermann">
+        <insert tableName="cars">
+            <column name="brand" value="Toyota"/>
+            <column name="model" value="Corolla"/>
+            <column name="production_year" valueNumeric="2018"/>
+            <column name="mileage" valueNumeric="25000"/>
+            <column name="price" valueNumeric="15000.00"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="color" value="Blue"/>
+            <column name="horsepower" valueNumeric="132"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="transmission" value="AUTOMATIC"/>
+        </insert>
+
+        <insert tableName="cars">
+            <column name="brand" value="Honda"/>
+            <column name="model" value="Civic"/>
+            <column name="production_year" valueNumeric="2019"/>
+            <column name="mileage" valueNumeric="20000"/>
+            <column name="price" valueNumeric="18000.00"/>
+            <column name="status" value="SOLD"/>
+            <column name="color" value="Red"/>
+            <column name="horsepower" valueNumeric="158"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="transmission" value="MANUAL"/>
+        </insert>
+
+        <insert tableName="cars">
+            <column name="brand" value="Ford"/>
+            <column name="model" value="Focus"/>
+            <column name="production_year" valueNumeric="2017"/>
+            <column name="mileage" valueNumeric="30000"/>
+            <column name="price" valueNumeric="13000.00"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="color" value="White"/>
+            <column name="horsepower" valueNumeric="160"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="transmission" value="AUTOMATIC"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
