@@ -52,6 +52,7 @@ public class Car {
     @DecimalMin(value = "1.0", message = "Price must be at least 1")
     private double price;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Status is required")
     private CarStatus status;
@@ -64,11 +65,12 @@ public class Car {
     @Max(value = 1500, message = "Horsepower must be less than 1500")
     private int horsepower;
 
-    @Column(name = "fuel_type")
+    @Column(name = "fuel_type", nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Fuel type is required")
     private FuelType fuelType;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Transmission is required")
     private Transmission transmission;
