@@ -52,6 +52,7 @@ public class Car {
     @DecimalMin(value = "1.0", message = "Price must be at least 1")
     private double price;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Status is required")
     private CarStatus status;
@@ -64,11 +65,12 @@ public class Car {
     @Max(value = 1500, message = "Horsepower must be less than 1500")
     private int horsepower;
 
-    @Column(name = "fuel_type")
+    @Column(name = "fuel_type", nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Fuel type is required")
     private FuelType fuelType;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Transmission is required")
     private Transmission transmission;
@@ -78,24 +80,15 @@ public class Car {
                double price, String status, String color, int horsepower,
                String fuelType, String transmission) {
 
-        if (brand == null || model == null || status == null ||
-                color == null || fuelType == null || transmission == null) {
-            throw new IllegalArgumentException("Arguments cannot be null");
-        }
-
-        try {
-            this.brand = brand;
-            this.model = model;
-            this.productionYear = productionYear;
-            this.mileage = mileage;
-            this.price = price;
-            this.status = CarStatus.valueOf(status.toUpperCase());
-            this.color = color;
-            this.horsepower = horsepower;
-            this.fuelType = FuelType.valueOf(fuelType.toUpperCase());
-            this.transmission = Transmission.valueOf(transmission.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid enum value: " + e.getMessage());
-        }
+        this.brand = brand;
+        this.model = model;
+        this.productionYear = productionYear;
+        this.mileage = mileage;
+        this.price = price;
+        this.status = CarStatus.valueOf(status.toUpperCase());
+        this.color = color;
+        this.horsepower = horsepower;
+        this.fuelType = FuelType.valueOf(fuelType.toUpperCase());
+        this.transmission = Transmission.valueOf(transmission.toUpperCase());
     }
 }
