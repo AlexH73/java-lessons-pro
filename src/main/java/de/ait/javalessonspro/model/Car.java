@@ -78,24 +78,15 @@ public class Car {
                double price, String status, String color, int horsepower,
                String fuelType, String transmission) {
 
-        if (brand == null || model == null || status == null ||
-                color == null || fuelType == null || transmission == null) {
-            throw new IllegalArgumentException("Arguments cannot be null");
-        }
-
-        try {
-            this.brand = brand;
-            this.model = model;
-            this.productionYear = productionYear;
-            this.mileage = mileage;
-            this.price = price;
-            this.status = CarStatus.valueOf(status.toUpperCase());
-            this.color = color;
-            this.horsepower = horsepower;
-            this.fuelType = FuelType.valueOf(fuelType.toUpperCase());
-            this.transmission = Transmission.valueOf(transmission.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid enum value: " + e.getMessage());
-        }
+        this.brand = brand;
+        this.model = model;
+        this.productionYear = productionYear;
+        this.mileage = mileage;
+        this.price = price;
+        this.status = CarStatus.valueOf(status.toUpperCase());
+        this.color = color;
+        this.horsepower = horsepower;
+        this.fuelType = FuelType.valueOf(fuelType.toUpperCase());
+        this.transmission = Transmission.valueOf(transmission.toUpperCase());
     }
 }
