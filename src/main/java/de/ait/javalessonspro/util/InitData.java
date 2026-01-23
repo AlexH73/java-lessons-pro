@@ -10,6 +10,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 @Configuration
@@ -26,6 +28,9 @@ public class InitData {
                 String[] statuses = {"AVAILABLE", "RESERVED", "SOLD", "IN_REPAIR"};
                 String[] fuelTypes = {"PETROL", "DIESEL", "HYBRID", "ELECTRIC"};
                 String[] transmissions = {"AUTOMATIC", "MANUAL"};
+                BigDecimal price = BigDecimal.valueOf(
+                        faker.number().randomDouble(2, 15_000, 120_000)
+                ).setScale(2, RoundingMode.HALF_UP);
 
                 for (int i = 0; i < 20; i++) {
                     Car car = new Car();
@@ -33,7 +38,7 @@ public class InitData {
                     car.setModel(faker.vehicle().model());
                     car.setProductionYear(faker.number().numberBetween(2018, 2024));
                     car.setMileage(faker.number().numberBetween(0, 60000));
-                    car.setPrice(faker.number().randomDouble(2, 15000, 120000));
+                    car.setPrice(price);
                     car.setStatus(CarStatus.valueOf(statuses[random.nextInt(statuses.length)]));
                     car.setColor(faker.color().name());
                     car.setHorsepower(faker.number().numberBetween(80, 500));

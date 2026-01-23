@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public final class CarValidator {
 
         // Production year
         int currentYear = Year.now().getValue();
-        if (car.getProductionYear() < 1900 || car.getProductionYear() > currentYear) {
+        if (car.getProductionYear() < 1886 || car.getProductionYear() > currentYear) {
 
             log.warn("Invalid car object received: productionYear={}",
                     car.getProductionYear());
@@ -63,7 +64,10 @@ public final class CarValidator {
         }
 
         // Price
-        if (car.getPrice() <= 0) {
+        if (car.getPrice() == null) {
+            log.warn("Price must not be null");
+            return false;
+        } else if (car.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             log.warn("Invalid car object received: price={}",
                     car.getPrice());
             return false;
@@ -130,10 +134,10 @@ public final class CarValidator {
 
         // Production year
         int currentYear = Year.now().getValue();
-        if (car.getProductionYear() < 1900 || car.getProductionYear() > currentYear) {
-            log.warn("Production year must be between 1900 and {}: productionYear={} ",
+        if (car.getProductionYear() < 1886 || car.getProductionYear() > currentYear) {
+            log.warn("Production year must be between 1886 and {}: productionYear={} ",
                     currentYear, car.getProductionYear());
-            errors.add("Production year must be between 1900 and " + currentYear);
+            errors.add("Production year must be between 1886 and " + currentYear);
         }
 
         // Mileage
@@ -144,9 +148,11 @@ public final class CarValidator {
         }
 
         // Price
-        if (car.getPrice() <= 0) {
-            log.warn("Price must be greater than 0: price={}",
-                    car.getPrice());
+        if (car.getPrice() == null) {
+            log.warn("Price must not be null");
+            errors.add("Price must not be null");
+        } else if (car.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            log.warn("Price must be greater than 0: price={}", car.getPrice());
             errors.add("Price must be greater than 0");
         }
 
