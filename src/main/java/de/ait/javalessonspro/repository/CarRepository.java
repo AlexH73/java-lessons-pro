@@ -25,9 +25,9 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     boolean existsById(@NonNull Long id);
 
-    boolean existsByBrandIgnoreCase(String brand);
-
-    boolean existsByColorIgnoreCase(String color);
-
-    boolean existsByFuelType(FuelType fuelType);
+//    boolean existsByBrandIgnoreCase(String brand);
+//
+//    boolean existsByColorIgnoreCase(String color);
+//
+//    boolean existsByFuelType(FuelType fuelType);
 }

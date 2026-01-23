@@ -92,7 +92,9 @@ public class CarController {
     )
     @GetMapping("/search")
     public ResponseEntity<List<Car>> searchCars(@RequestParam String brand) {
-        if (!carRepository.existsByBrandIgnoreCase(brand)) {
+        List<Car> cars = carRepository.findByBrandIgnoreCase(brand);
+
+        if (cars.isEmpty()) {
             log.warn("Search cars: brand '{}' not found", brand);
             return ResponseEntity.notFound().build();
         }
@@ -106,7 +108,7 @@ public class CarController {
                             brand.toLowerCase()))
                     .build();
         }
-        List<Car> cars = carRepository.findByBrandIgnoreCase(brand);
+
         log.info("Search cars: found {} cars for brand '{}'", cars.size(), brand);
 
         return ResponseEntity.ok(cars);
@@ -211,12 +213,13 @@ public class CarController {
     )
     @GetMapping("/by-color")
     public ResponseEntity<List<Car>> getCarByColor(@RequestParam String color) {
-        if (!carRepository.existsByColorIgnoreCase(color)) {
+        List<Car> cars = carRepository.findByColorIgnoreCase(color);
+
+        if (cars.isEmpty()) {
             log.warn("Search cars by color: color '{}' not found", color);
             return ResponseEntity.notFound().build();
         }
 
-        List<Car> cars = carRepository.findByColorIgnoreCase(color);
         log.info("Search cars by color: color='{}', found={}", color, cars.size());
 
         return ResponseEntity.ok(cars);
@@ -230,12 +233,12 @@ public class CarController {
     )
     @GetMapping("/by-fuel")
     public ResponseEntity<List<Car>> getCarByFuelType(@RequestParam FuelType fuelType) {
-        if (!carRepository.existsByFuelType(fuelType)) {
+        List<Car> cars = carRepository.findByFuelType(fuelType);
+        if (cars.isEmpty()) {
             log.warn("Search cars by fuel type: fuelType '{}' not found", fuelType);
             return ResponseEntity.notFound().build();
         }
 
-        List<Car> cars = carRepository.findByFuelType(fuelType);
         log.info("Search cars by fuel type: fuelType='{}', found={}", fuelType, cars.size());
 
         return ResponseEntity.ok(cars);
