@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -53,7 +54,7 @@ public class CarControllerIT {
         car.setModel(model);
         car.setProductionYear(2020);
         car.setMileage(30000);
-        car.setPrice(30000.00);
+        car.setPrice(BigDecimal.valueOf(30000.00));
         car.setStatus(CarStatus.AVAILABLE);
         car.setColor("Black");
         car.setHorsepower(200);
@@ -98,7 +99,8 @@ public class CarControllerIT {
 
         assertEquals(car.getBrand(), cars.getFirst().getBrand());
         assertEquals(car.getModel(), cars.getFirst().getModel());
-        assertEquals(car.getPrice(), cars.getFirst().getPrice());
+        assertEquals(0,
+                car.getPrice().compareTo(cars.getFirst().getPrice()));
         assertEquals(car.getStatus(), cars.getFirst().getStatus());
         assertEquals(car.getColor(), cars.getFirst().getColor());
         assertEquals(car.getFuelType(), cars.getFirst().getFuelType());
@@ -127,7 +129,8 @@ public class CarControllerIT {
 
         assertEquals(car.getBrand(), cars.getFirst().getBrand());
         assertEquals(car.getModel(), cars.getFirst().getModel());
-        assertEquals(car.getPrice(), cars.getFirst().getPrice());
+        assertEquals(0,
+                car.getPrice().compareTo(cars.getFirst().getPrice()));
         assertEquals(car.getStatus(), cars.getFirst().getStatus());
         assertEquals(car.getColor(), cars.getFirst().getColor());
         assertEquals(car.getFuelType(), cars.getFirst().getFuelType());

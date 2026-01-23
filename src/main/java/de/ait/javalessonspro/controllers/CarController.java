@@ -9,6 +9,7 @@ import de.ait.javalessonspro.repository.CarRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -134,7 +136,7 @@ public class CarController {
             description = "Creates a new car and stores it in the system."
     )
     @PostMapping
-    public ResponseEntity<?> addCar(@RequestBody Car car) {
+    public ResponseEntity<?> addCar(@Valid @RequestBody Car car) {
 
         List<String> errors = CarValidator.validateWithErrors(car);
 
@@ -197,7 +199,7 @@ public class CarController {
     )
     @GetMapping("/by-price")
     public ResponseEntity<List<Car>> searchByPriceBetween(
-            @RequestParam double min, @RequestParam double max
+            @RequestParam BigDecimal min, @RequestParam BigDecimal max
     ) {
 
         List<Car> cars = carRepository.findByPriceBetween(min, max);
