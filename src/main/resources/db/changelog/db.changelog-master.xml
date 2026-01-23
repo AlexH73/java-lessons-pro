@@ -9,4 +9,5 @@
     <include file="/db/changelog/002-add-colums.xml"/>
     <include file="/db/changelog/003-mdify-columm.xml"/>
     <include file="/db/changelog/004-seed-test-data.xml"/>
+    <include file="/db/changelog/005-2026-01-23-change-price-type.xml"/>
 </databaseChangeLog>
