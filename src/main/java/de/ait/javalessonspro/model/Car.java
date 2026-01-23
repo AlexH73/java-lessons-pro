@@ -6,6 +6,7 @@ import de.ait.javalessonspro.enums.FuelType;
 import de.ait.javalessonspro.enums.Transmission;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,6 +14,8 @@ import lombok.*;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cars", indexes = {
@@ -43,14 +46,18 @@ public class Car {
     private String model;
 
     @Column(name = "production_year")
-    @Min(value = 1900, message = "Year must be greater than 1900")
+    @NotNull(message = "Year must not be null")
+    @Min(value = 1886, message = "Year must be no earlier than 1886")
+    @Max(value = 2100, message = "Year must not be in the far future")
     private int productionYear;
 
     @Min(value = 1, message = "Mileage must be greater than 0")
     private int mileage;
 
-    @DecimalMin(value = "1.0", message = "Price must be at least 1")
-    private double price;
+    @NotNull(message = "Price must not be null")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    @Digits(integer = 10, fraction = 2, message = "Price format is invalid")
+    private BigDecimal price;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -59,6 +66,7 @@ public class Car {
 
     @Column(nullable = false)
     @NotBlank(message = "Color must not be empty")
+    @Size(max = 50, message = "Color must not exceed 50 characters")
     private String color;
 
     @Min(value = 1, message = "Horsepower must be at least 1")
@@ -77,7 +85,7 @@ public class Car {
 
 
     public Car(String brand, String model, int productionYear, int mileage,
-               double price, String status, String color, int horsepower,
+               BigDecimal price, String status, String color, int horsepower,
                String fuelType, String transmission) {
 
         this.brand = brand;
