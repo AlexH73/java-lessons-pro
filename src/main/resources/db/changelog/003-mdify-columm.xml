@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
 
-    <changeSet id="002-add-collor-horsepower" author="Alexander Hermann">
+    <changeSet id="003-mdify-columm" author="Alexander Hermann">
         <modifyDataType tableName="cars" columnName="mileage" newDataType="BIGINT"/>
     </changeSet>
 </databaseChangeLog>
