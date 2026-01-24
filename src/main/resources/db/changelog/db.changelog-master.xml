@@ -10,4 +10,8 @@
     <include file="/db/changelog/003-mdify-columm.xml"/>
     <include file="/db/changelog/004-seed-test-data.xml"/>
     <include file="/db/changelog/005-2026-01-23-change-price-type.xml"/>
+    <include file="/db/changelog/005-add-audit-columns.xml"/>
+    <include file="/db/changelog/006-add-check-constraints.xml"/>
+    <include file="/db/changelog/007-add-soft-delete-flag.xml"/>
+    <include file="db/changelog/008-seed-test-data-only-test.xml"/>
 </databaseChangeLog>
