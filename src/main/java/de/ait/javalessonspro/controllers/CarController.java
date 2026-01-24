@@ -136,7 +136,7 @@ public class CarController {
             description = "Creates a new car and stores it in the system."
     )
     @PostMapping
-    public ResponseEntity<?> addCar(@Valid @RequestBody Car car) {
+    public ResponseEntity<?> addCar(@RequestBody Car car) {
 
         List<String> errors = CarValidator.validateWithErrors(car);
 

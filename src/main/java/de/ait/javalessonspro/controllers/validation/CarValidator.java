@@ -23,7 +23,7 @@ public final class CarValidator {
     private static final Logger log =
             LoggerFactory.getLogger(CarValidator.class);
 
-    public static boolean isValid(Car car) {
+/*    public static boolean isValid(Car car) {
 
         if (car == null) {
             log.warn("Invalid car object received: car=null");
@@ -102,7 +102,7 @@ public final class CarValidator {
         }
 
         return true;
-    }
+    }*/
 
     public static List<String> validateWithErrors(Car car) {
 
