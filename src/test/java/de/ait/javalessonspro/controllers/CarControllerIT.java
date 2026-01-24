@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -60,6 +61,9 @@ public class CarControllerIT {
         car.setHorsepower(200);
         car.setFuelType(FuelType.PETROL);
         car.setTransmission(Transmission.AUTOMATIC);
+        car.setCreatedAt(LocalDateTime.now());
+        car.setUpdatedAt(LocalDateTime.now());
+        car.setDeleted(false);
 
         return car;
     }
