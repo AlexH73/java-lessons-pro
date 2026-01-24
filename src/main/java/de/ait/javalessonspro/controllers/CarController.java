@@ -222,6 +222,16 @@ public class CarController {
             return ResponseEntity.notFound().build();
         }
 
+        if (!color.equals(color.toLowerCase())) {
+            log.info("Search cars by color: redirecting color '{}' to lowercase '{}'",
+                    color, cars.size());
+
+            return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
+                    .location(URI.create("/api/cars/by-color?color=" +
+                            color.toLowerCase()))
+                    .build();
+        }
+
         log.info("Search cars by color: color='{}', found={}", color, cars.size());
 
         return ResponseEntity.ok(cars);
