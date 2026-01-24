@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="008-seed-test-data-only-test" author="Alexander Hermann" context="test">
+
+        <insert tableName="cars">
+            <column name="brand" value="BMW"/>
+            <column name="model" value="X5"/>
+            <column name="price" valueNumeric="35000"/>
+            <column name="mileage" valueNumeric="80000"/>
+            <column name="production_year" valueNumeric="2018"/>
+            <column name="color" value="Black"/>
+            <column name="horsepower" valueNumeric="160"/>
+            <column name="status" value="AVAILABLE"/>
+            <column name="fuel_type" value="DIESEL"/>
+            <column name="transmission" value="AUTOMATIC"/>
+        </insert>
+
+        <insert tableName="cars">
+            <column name="brand" value="Audi"/>
+            <column name="model" value="A4"/>
+            <column name="price" valueNumeric="22000"/>
+            <column name="mileage" valueNumeric="60000"/>
+            <column name="production_year" valueNumeric="2017"/>
+            <column name="color" value="White"/>
+            <column name="horsepower" valueNumeric="260"/>
+            <column name="status" value="SOLD"/>
+            <column name="fuel_type" value="PETROL"/>
+            <column name="transmission" value="MANUAL"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
