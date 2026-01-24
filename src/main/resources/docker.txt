@@ -1,0 +1,19 @@
+
+
+docker build -t javalessonspro:1.0 .                     # сборка образа из Dockerfile в текущей директории
+docker run --name jplp -p 8081:8081 javalessonspro:1.0   # запуск контейнера с пробросом порта
+
+docker images                      # список образов
+docker stop jplp                   # остановка контейнера
+
+docker ps                         # список запущенных контейнеров
+docker ps -a                      # список всех контейнеров
+docker rm jplp                    # удаление остановленного контейнера
+docker rmi javalessonspro:1.0     # удаление образа
+
+docker compose up                 # запуск сервисов
+docker compose up -d              # запуск в фоне
+docker compose down               # остановка и удаление
+docker compose ps                 # статус сервисов
+docker compose logs               # логи
+docker compose build              # пересборка образов
