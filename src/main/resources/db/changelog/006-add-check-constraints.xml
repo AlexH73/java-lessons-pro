@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="006-add-check-constraints" author="Alexander Hermann">
+        <sql>
+            ALTER TABLE cars
+                ADD CONSTRAINT chk_price_positive CHECK (price > 0);
+        </sql>
+
+        <sql>
+            ALTER TABLE cars
+                ADD CONSTRAINT chk_mileage_non_negative CHECK (mileage >= 0);
+        </sql>
+
+        <sql>
+            ALTER TABLE cars
+                ADD CONSTRAINT chk_production_year_min CHECK (production_year >= 1886);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

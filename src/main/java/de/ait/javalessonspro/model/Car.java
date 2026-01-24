@@ -16,6 +16,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cars", indexes = {
@@ -52,7 +53,7 @@ public class Car {
     private int productionYear;
 
     @Min(value = 1, message = "Mileage must be greater than 0")
-    private int mileage;
+    private long mileage;
 
     @NotNull(message = "Price must not be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
@@ -83,10 +84,19 @@ public class Car {
     @NotNull(message = "Transmission is required")
     private Transmission transmission;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    public Car(String brand, String model, int productionYear, int mileage,
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+
+    public Car(String brand, String model, int productionYear, long mileage,
                BigDecimal price, String status, String color, int horsepower,
-               String fuelType, String transmission) {
+               String fuelType, String transmission, LocalDateTime createdAt, LocalDateTime updatedAt, boolean deleted) {
 
         this.brand = brand;
         this.model = model;
@@ -98,5 +108,19 @@ public class Car {
         this.horsepower = horsepower;
         this.fuelType = FuelType.valueOf(fuelType.toUpperCase());
         this.transmission = Transmission.valueOf(transmission.toUpperCase());
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deleted = deleted;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

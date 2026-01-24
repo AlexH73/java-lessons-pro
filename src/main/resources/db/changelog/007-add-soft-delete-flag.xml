@@ -5,7 +5,15 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
 
-    <changeSet id="003-mdify-columm" author="Alexander Hermann">
-        <modifyDataType tableName="cars" columnName="mileage" newDataType="BIGINT"/>
+    <changeSet id="007-add-soft-delete-flag" author="Alexander Hermann">
+
+        <addColumn tableName="cars">
+            <column name="deleted"
+                    type="BOOLEAN"
+                    defaultValueBoolean="false"
+            >
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
