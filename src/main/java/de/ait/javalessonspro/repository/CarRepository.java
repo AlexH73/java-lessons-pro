@@ -8,8 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface CarRepository extends JpaRepository<Car, Long> {
+
+
+    Optional<Car> findById(Long id);
 
     // SELECT * FROM CARS WHERE brand = ?
     List<Car> findByBrandIgnoreCase(String brand);
