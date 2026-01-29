@@ -1,4 +1,4 @@
-package de.ait.javalessonspro.controllers.dto;
+package de.ait.javalessonspro.dto;
 
 import java.util.List;
 
