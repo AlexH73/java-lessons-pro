@@ -1,6 +1,6 @@
 package de.ait.javalessonspro.controllers;
 
-import de.ait.javalessonspro.controllers.dto.ValidationErrorResponse;
+import de.ait.javalessonspro.dto.ValidationErrorResponse;
 import de.ait.javalessonspro.controllers.validation.CarValidator;
 import de.ait.javalessonspro.enums.CarStatus;
 import de.ait.javalessonspro.enums.FuelType;
@@ -9,7 +9,6 @@ import de.ait.javalessonspro.repository.CarRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
