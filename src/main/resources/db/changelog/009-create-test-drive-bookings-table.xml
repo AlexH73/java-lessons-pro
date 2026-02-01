@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="009-create-test-drive-bookings-table" author="Alexander Hermann">
+        <createTable tableName="test_drive_bookings">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_brand" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_model" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_year" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_color" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_horsepower" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_transmission" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_fuel_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_mileage" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="car_price" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="test_drive_date_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dealer_address" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dealer_phone" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="confirmation_id" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="reminder_id" type="VARCHAR(100)">
+                <constraints unique="true"/>
+            </column>
+            <column name="reminder_sent" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="test_drive_bookings" indexName="idx_client_email">
+            <column name="client_email"/>
+        </createIndex>
+
+        <createIndex tableName="test_drive_bookings" indexName="idx_car_id">
+            <column name="car_id"/>
+        </createIndex>
+
+        <createIndex tableName="test_drive_bookings" indexName="idx_confirmation_id">
+            <column name="confirmation_id"/>
+        </createIndex>
+
+        <createIndex tableName="test_drive_bookings" indexName="idx_reminder_id">
+            <column name="reminder_id"/>
+        </createIndex>
+
+        <createIndex tableName="test_drive_bookings" indexName="idx_test_drive_date_time">
+            <column name="test_drive_date_time"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
