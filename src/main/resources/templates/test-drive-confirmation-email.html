@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение тест-драйва</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #1a56db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+        .car-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .car-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .car-info img {margin-right: 20px;}
+        .car-info p {padding-top: 0; margin-bottom: -10px;}
+        .car-image {
+            width: 200px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .details {
+            flex: 1;
+        }
+        .button {
+            display: inline-block;
+            background-color: #dc2626;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .info-box {
+            background: #eff6ff;
+            padding: 15px;
+            border-left: 4px solid #1a56db;
+            margin: 20px 0;
+        }
+        .contact-info {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🚗 Автосалон  <span th:text="${dealerName}">AIT Gr.59 API</span></h1>
+    <p>Подтверждение записи на тест-драйв</p>
+</div>
+
+<div class="content">
+    <h2>Здравствуйте, <span th:text="${clientName}">Иван</span>!</h2>
+    <p>Ваша заявка на тест-драйв успешно подтверждена.</p>
+
+    <div class="info-box">
+        <p><strong>Номер подтверждения:</strong> <span th:text="${confirmationId}">TD-123456</span></p>
+        <p><strong>Дата и время:</strong> <span th:text="${testDriveDateTime}">01.02.2024 15:30</span></p>
+    </div>
+
+    <div class="car-card">
+        <h3>Информация об автомобиле</h3>
+        <div class="car-info">
+            <img alt="Car" class="car-image" th:src="${carImageUrl}" />
+            <div class="details">
+                <h4 th:text="${carBrand + ' ' + carModel}">BMW X5</h4>
+                <p><strong>Год выпуска:</strong> <span th:text="${carYear}">2023</span></p>
+                <p><strong>Цена:</strong> <span th:text="${carPrice}">5 000 000 €</span></p>
+                <p><strong>Цвет:</strong> <span th:text="${carColor}">Red</span></p>
+                <p><strong>Мощность:</strong> <span th:text="${carEngine}">200 л.с.</span></p>
+                <p><strong>Пробег:</strong> <span th:text="${carMileage}">20000 км</span></p>
+                <p><strong>Коробка передач:</strong> <span th:text="${carTransmission}">Автомат</span></p>
+                <p><strong>Тип топлива:</strong> <span th:text="${carFuelType}">Бензин</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-info">
+        <h3>Контакты и адрес</h3>
+        <p><strong>📍 Адрес салона:</strong><br>
+            <span th:text="${dealerAddress}">ул. Примерная, 123, Москва</span></p>
+        <p><strong>📞 Телефон:</strong><br>
+            <span th:text="${dealerPhone}">+7 (495) 123-45-67</span></p>
+        <p><strong>⏰ Время работы:</strong><br>
+            Пн-Пт: 9:00-20:00, Сб-Вс: 10:00-18:00</p>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <p><strong>Пожалуйста, прибудьте за 10 минут до назначенного времени.</strong></p>
+        <p>При себе необходимо иметь водительское удостоверение.</p>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <a class="button" th:href="${cancellationUrl + '/api/test-drive/cancel?id=' + confirmationId}">
+            Отменить запись
+        </a>
+    </div>
+</div>
+
+<div class="footer">
+    <p>© 2024 Автосалон PremiumAuto. Все права защищены.</p>
+    <p>Это письмо было отправлено автоматически. Пожалуйста, не отвечайте на него.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отмена тест-драйва</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #dc2626;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+        .info-box {
+            background: #fef2f2;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+            margin: 20px 0;
+        }
+        .car-info {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #1a56db;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🚗 Отмена тест-драйва</h1>
+    <p>Автосалон <span th:text="${dealerName}">AIT Gr.59 API</span></p>
+</div>
+
+<div class="content">
+    <h2>Уважаемый(ая), <span th:text="${clientName}">Иван</span>!</h2>
+
+    <div class="info-box">
+        <h3>❌ Ваша запись на тест-драйв отменена</h3>
+        <p><strong>Дата и время записи:</strong> <span th:text="${testDriveDateTime}">01.02.2024 15:30</span></p>
+        <p><strong>Дата и время отмены:</strong> <span th:text="${cancellationDateTime}">01.02.2024 10:00</span></p>
+        <p><strong>Причина отмены:</strong> <span th:text="${cancellationReason}">По инициативе клиента</span></p>
+    </div>
+
+    <div class="car-info">
+        <h3>Информация об автомобиле</h3>
+        <p><strong>Автомобиль:</strong> <span th:text="${carBrand + ' ' + carModel}">BMW X5</span></p>
+        <p><strong>Номер бронирования:</strong> <span th:text="${bookingId}">TD-123456</span></p>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <p>Если отмена произошла по ошибке или у вас есть вопросы, свяжитесь с нами.</p>
+        <a th:href="'mailto:' + ${dealerEmail} + '?subject=Вопрос по отмене тест-драйва ' + ${bookingId}"
+           class="button">
+            Связаться с автосалоном
+        </a>
+    </div>
+
+    <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <p><strong>📞 Контактная информация:</strong></p>
+        <p>Телефон: <span th:text="${dealerPhone}">+7 (812) 603-86-70</span></p>
+        <p>Мы будем рады помочь вам записаться на другое время!</p>
+    </div>
+</div>
+
+<div class="footer">
+    <p>Автосалон <span th:text="${dealerName}">AIT Gr.59 API</span> © 2024. Все права защищены.</p>
+    <p>Это письмо было отправлено автоматически. Пожалуйста, не отвечайте на него.</p>
+</div>
+</body>
+</html>
