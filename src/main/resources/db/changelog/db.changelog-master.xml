@@ -13,9 +13,9 @@
     <include file="/db/changelog/005-add-audit-columns.xml"/>
     <include file="/db/changelog/006-add-check-constraints.xml"/>
     <include file="/db/changelog/007-add-soft-delete-flag.xml"/>
-    <include file="db/changelog/008-seed-test-data-only-test.xml"/>
-    <include file="db/changelog/009-create-test-drive-bookings-table.xml"/>
-    <include file="db/changelog/010-create-test-drive-bookings-table.xml"/>
-    <include file="db/changelog/011-test-test-drive-bookings-data.xml"/>
-    <include file="db/changelog/012-add-new-column-to-test-drive-bookings.xml"/>
+    <include file="/db/changelog/008-seed-test-data-only-test.xml"/>
+    <include file="/db/changelog/009-create-test-drive-bookings-table.xml"/>
+    <include file="/db/changelog/010-create-test-drive-bookings-table.xml"/>
+    <include file="/db/changelog/011-test-test-drive-bookings-data.xml"/>
+    <include file="/db/changelog/012-add-new-column-to-test-drive-bookings.xml"/>
 </databaseChangeLog>
