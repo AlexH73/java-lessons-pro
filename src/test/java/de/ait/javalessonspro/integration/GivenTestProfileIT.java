@@ -1,7 +1,7 @@
 package de.ait.javalessonspro.integration;
 
 import de.ait.javalessonspro.model.Car;
-import de.ait.javalessonspro.repository.CarRepository;
+import de.ait.javalessonspro.repositories.CarRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

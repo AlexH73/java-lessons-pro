@@ -1,4 +1,4 @@
-package de.ait.javalessonspro.repository;
+package de.ait.javalessonspro.repositories;
 
 import de.ait.javalessonspro.enums.CarStatus;
 import de.ait.javalessonspro.enums.FuelType;

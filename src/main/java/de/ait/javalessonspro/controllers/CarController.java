@@ -5,7 +5,7 @@ import de.ait.javalessonspro.controllers.validation.CarValidator;
 import de.ait.javalessonspro.enums.CarStatus;
 import de.ait.javalessonspro.enums.FuelType;
 import de.ait.javalessonspro.model.Car;
-import de.ait.javalessonspro.repository.CarRepository;
+import de.ait.javalessonspro.repositories.CarRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
