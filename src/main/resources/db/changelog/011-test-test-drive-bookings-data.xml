@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="011-test-test-drive-bookings-data" author="Alexander Hermann" context="test">
+        <comment>Insert test data for test_drive_bookings table</comment>
+
+        <!-- Удаляем старые тестовые данные, если есть -->
+        <delete tableName="test_drive_bookings">
+            <where>confirmation_id LIKE 'TD-TEST%'</where>
+        </delete>
+
+        <!-- Вставляем тестовые записи тест-драйвов -->
+        <insert tableName="test_drive_bookings">
+            <column name="id" value="1000"/>
+            <column name="client_email" value="test1@example.com"/>
+            <column name="client_name" value="Иван Тестов"/>
+            <column name="car_id" value="1"/>
+            <column name="car_brand" value="TestBrand"/>
+            <column name="car_model" value="TestModel1"/>
+            <column name="car_year" value="2023"/>
+            <column name="car_color" value="Black"/>
+            <column name="car_horsepower" value="250"/>
+            <column name="car_transmission" value="AUTOMATIC"/>
+            <column name="car_fuel_type" value="PETROL"/>
+            <column name="car_mileage" value="10000"/>
+            <column name="car_price" value="75000.00 €"/>
+            <column name="test_drive_date_time" value="2026-02-02T15:30:00"/>
+            <column name="dealer_address" value="ул. Тестовая, 1"/>
+            <column name="dealer_phone" value="+7 (999) 123-45-67"/>
+            <column name="confirmation_id" value="TD-TEST001"/>
+            <column name="reminder_sent" value="false"/>
+            <column name="created_at" value="2026-01-31T10:00:00"/>
+            <column name="status" value="CONFIRMED"/>
+        </insert>
+
+        <insert tableName="test_drive_bookings">
+            <column name="id" value="1001"/>
+            <column name="client_email" value="test2@example.com"/>
+            <column name="client_name" value="Петр Тестов"/>
+            <column name="car_id" value="2"/>
+            <column name="car_brand" value="TestBrand"/>
+            <column name="car_model" value="TestModel2"/>
+            <column name="car_year" value="2022"/>
+            <column name="car_color" value="White"/>
+            <column name="car_horsepower" value="200"/>
+            <column name="car_transmission" value="MANUAL"/>
+            <column name="car_fuel_type" value="DIESEL"/>
+            <column name="car_mileage" value="15000"/>
+            <column name="car_price" value="55000.00 €"/>
+            <column name="test_drive_date_time" value="2026-02-03T14:00:00"/>
+            <column name="dealer_address" value="ул. Тестовая, 1"/>
+            <column name="dealer_phone" value="+7 (999) 123-45-67"/>
+            <column name="confirmation_id" value="TD-TEST002"/>
+            <column name="reminder_id" value="REM-TEST002"/>
+            <column name="reminder_sent" value="true"/>
+            <column name="created_at" value="2026-01-31T11:00:00"/>
+            <column name="status" value="REMINDER_SENT"/>
+        </insert>
+
+        <insert tableName="test_drive_bookings">
+            <column name="id" value="1002"/>
+            <column name="client_email" value="test3@example.com"/>
+            <column name="client_name" value="Сергей Тестов"/>
+            <column name="car_id" value="3"/>
+            <column name="car_brand" value="TestBrand"/>
+            <column name="car_model" value="TestModel3"/>
+            <column name="car_year" value="2023"/>
+            <column name="car_color" value="Silver"/>
+            <column name="car_horsepower" value="300"/>
+            <column name="car_transmission" value="AUTOMATIC"/>
+            <column name="car_fuel_type" value="HYBRID"/>
+            <column name="car_mileage" value="5000"/>
+            <column name="car_price" value="80000.00 €"/>
+            <column name="test_drive_date_time" value="2026-02-01T12:00:00"/> <!-- Прошедшая дата -->
+            <column name="dealer_address" value="ул. Тестовая, 1"/>
+            <column name="dealer_phone" value="+7 (999) 123-45-67"/>
+            <column name="confirmation_id" value="TD-TEST003"/>
+            <column name="reminder_sent" value="false"/>
+            <column name="cancellation_reason" value="Изменение планов"/>
+            <column name="created_at" value="2026-01-30T09:00:00"/>
+            <column name="status" value="CANCELLED"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
