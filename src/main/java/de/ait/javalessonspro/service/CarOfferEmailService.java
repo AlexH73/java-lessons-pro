@@ -2,7 +2,7 @@ package de.ait.javalessonspro.service;
 
 import de.ait.javalessonspro.dto.CarOfferEmailRequest;
 import de.ait.javalessonspro.model.Car;
-import de.ait.javalessonspro.repository.CarRepository;
+import de.ait.javalessonspro.repositories.CarRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
