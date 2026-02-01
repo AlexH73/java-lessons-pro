@@ -4,7 +4,7 @@ import de.ait.javalessonspro.enums.CarStatus;
 import de.ait.javalessonspro.enums.FuelType;
 import de.ait.javalessonspro.enums.Transmission;
 import de.ait.javalessonspro.model.Car;
-import de.ait.javalessonspro.repository.CarRepository;
+import de.ait.javalessonspro.repositories.CarRepository;
 import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
