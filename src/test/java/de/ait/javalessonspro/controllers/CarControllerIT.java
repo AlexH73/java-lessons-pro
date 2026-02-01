@@ -5,7 +5,7 @@ import de.ait.javalessonspro.enums.CarStatus;
 import de.ait.javalessonspro.enums.FuelType;
 import de.ait.javalessonspro.enums.Transmission;
 import de.ait.javalessonspro.model.Car;
-import de.ait.javalessonspro.repository.CarRepository;
+import de.ait.javalessonspro.repositories.CarRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
