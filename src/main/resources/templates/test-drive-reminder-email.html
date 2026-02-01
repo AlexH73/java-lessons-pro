@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Напоминание о тест-драйве</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #059669;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+        .reminder-box {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #059669;
+            margin: 20px 0;
+        }
+        .car-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .car-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .car-info img {margin-right: 20px;}
+        .car-info p {padding-top: 0; margin-bottom: -10px;}
+        .car-image {
+            width: 150px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .button {
+            display: inline-block;
+            background-color: #dc2626;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🔔 Напоминание о тест-драйве</h1>
+    <p>Автосалон <span th:text="${dealerName}">AIT Gr.59 API</span></p>
+</div>
+
+<div class="content">
+    <h2>Здравствуйте, <span th:text="${clientName}">Иван</span>!</h2>
+    <p>Напоминаем о вашей записи на тест-драйв.</p>
+
+    <div class="reminder-box">
+        <h3>🕐 Ваш тест-драйв скоро начнется!</h3>
+        <p><strong>Дата и время:</strong> <span th:text="${testDriveDateTime}">01.02.2024 15:30</span></p>
+        <p><strong>Номер напоминания:</strong> <span th:text="${reminderId}">REM-123456</span></p>
+        <p><strong>До начала осталось:</strong> <span th:text="${hoursUntil}">24</span> часов</p>
+    </div>
+
+    <div class="car-card">
+        <h3>Автомобиль для тест-драйва</h3>
+        <div class="car-info">
+            <img class="car-image" th:src="${carImageUrl}" alt="Изображение автомобиля" />
+            <div>
+                <h4 th:text="${carBrand + ' - ' + carModel}">BMW - X5</h4>
+                <p><strong>Год выпуска:</strong> <span th:text="${carYear}">2023</span></p>
+                <p><strong>Цвет:</strong> <span th:text="${carColor}">Red</span></p>
+                <p><strong>Мощность:</strong> <span th:text="${carEngine}">200 л.с.</span></p>
+                <p><strong>Коробка передач:</strong> <span th:text="${carTransmission}">Автомат</span></p>
+                <p><strong>Тип топлива:</strong> <span th:text="${carFuelType}">Бензин</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin: 30px 0;">
+        <h3>📋 Что нужно помнить:</h3>
+        <ul>
+            <li>Прибудьте за 10-15 минут до начала</li>
+            <li>Возьмите с собой водительское удостоверение</li>
+            <li>Имейте при себе документ, удостоверяющий личность</li>
+            <li>Продолжительность тест-драйва: 30 минут</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <a class="button" th:href="${cancellationUrl + '/api/test-drive/cancel?id=' + confirmationId}">
+            Отменить запись
+        </a>
+        <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">
+            Если вы не можете прийти, пожалуйста, отмените запись
+        </p>
+    </div>
+
+    <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <p><strong>⚠️ Важно:</strong> В случае опоздания более чем на 15 минут,
+            тест-драйв может быть перенесен на другое время.</p>
+    </div>
+</div>
+
+<div class="footer">
+    <p><strong>📍 Адрес салона: </strong><span th:text="${dealerAddress}">Адрес</span></p>
+    <p><strong>📞 Телефон: </strong><span th:text="${dealerPhone}">Телефон</span></p>
+    <p>Автосалон <span th:text="${dealerName}">AIT Gr.59 API</span> © 2024. Все права защищены.</p>
+    <p>Это письмо было отправлено автоматически. Пожалуйста, не отвечайте на него.</p>
+</div>
+</body>
+</html>
