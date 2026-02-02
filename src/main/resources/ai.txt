@@ -1,0 +1,4 @@
+Схема интеграции
+клиент --> spring controller --> Service --> HTTP Client --> AI API
+Ответ AI API (JSON) --> Backend формирует ответ --> клиент
+запрос: модель, роль, вопрос
