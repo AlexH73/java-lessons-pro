@@ -79,7 +79,7 @@ public class CarDocumentsOsService {
 
             String storedFilename = UUID.randomUUID() + "_" + originalFilename.toLowerCase();
 
-            Path targetPath = carDir.resolve(storedFilename);
+            Path targetPath = typeDir.resolve(storedFilename);
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
             CarDocumentOs doc = new CarDocumentOs(
