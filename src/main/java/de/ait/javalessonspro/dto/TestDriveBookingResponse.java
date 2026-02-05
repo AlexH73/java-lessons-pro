@@ -1,7 +1,6 @@
 package de.ait.javalessonspro.dto;
 
 import de.ait.javalessonspro.enums.BookingStatus;
-import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDateTime;
 /**
