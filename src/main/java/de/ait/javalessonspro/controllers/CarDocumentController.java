@@ -34,6 +34,10 @@ public class CarDocumentController {
     public ResponseEntity<CarDocumentOs> uploadCarDocument(@PathVariable Long carId,
                                                            @RequestParam CarDocumentType docType,
                                                            @RequestPart("file") MultipartFile file){
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().contains("..")) {
+            return ResponseEntity.badRequest().build();
+        }
+
         CarDocumentOs saved = service.uploadCarDocument(carId, docType, file);
         log.info("Car document with id {} saved", saved.getId());
         return  ResponseEntity.status(HttpStatus.CREATED).body(saved);
