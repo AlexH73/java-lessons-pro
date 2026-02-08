@@ -34,13 +34,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CarDocumentUploadIT {
 
     @Autowired
-    private  MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    private  CarRepository carRepository;
+    private CarRepository carRepository;
 
     @Autowired
-    private  CarDocumentOsRepository carDocumentOsRepository;
+    private CarDocumentOsRepository carDocumentOsRepository;
 
     @Value("${app.upload.car-docs-dir}")
     private String uploadDir;
@@ -48,16 +48,15 @@ public class CarDocumentUploadIT {
     private ObjectMapper objectMapper;
 
 
-
     @BeforeEach
-    void setUp() throws Exception{
+    void setUp() throws Exception {
         carRepository.deleteAll();
         carDocumentOsRepository.deleteAll();
 
         Path dir = Path.of(uploadDir);
-        if(Files.exists(dir)){
-            try(var walk = Files.walk(dir)) {
-                walk.sorted((a,b) -> b.compareTo(a))
+        if (Files.exists(dir)) {
+            try (var walk = Files.walk(dir)) {
+                walk.sorted((a, b) -> b.compareTo(a))
                         .forEach(path -> {
                             try {
                                 Files.delete(path);
@@ -65,8 +64,7 @@ public class CarDocumentUploadIT {
                                 System.out.println("Error deleting file " + path);
                             }
                         });
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Error deleting dir " + dir);
             }
         }
@@ -74,14 +72,13 @@ public class CarDocumentUploadIT {
     }
 
     @Test
-    void testUploadShouldSaveFileToOsAndSaveMetadataToDb() throws Exception{
+    void testUploadShouldSaveFileToOsAndSaveMetadataToDb() throws Exception {
         Car car = new Car();
-        //car.setId(5L);
         car.setBrand("BMW");
         car.setModel("X5");
         car.setProductionYear(2020);
         car.setMileage(100000);
-        car.setPrice(BigDecimal.valueOf(50000.00));
+        car.setPrice(BigDecimal.valueOf(50000));
         car.setStatus(CarStatus.AVAILABLE);
         car.setColor("red");
         car.setFuelType(FuelType.DIESEL);
@@ -135,7 +132,5 @@ public class CarDocumentUploadIT {
         byte[] storedBytes = Files.readAllBytes(storedPath);
 
         assertThat(storedBytes).isEqualTo(fileContent);
-
-
     }
 }
