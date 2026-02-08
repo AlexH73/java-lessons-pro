@@ -1,13 +1,23 @@
 package de.ait.javalessonspro.service;
 
-import de.ait.javalessonspro.repositories.CarDocumentOsRepository;
+import de.ait.javalessonspro.enums.CandidateDocType;
+import de.ait.javalessonspro.model.CandidateDocumentOs;
+import de.ait.javalessonspro.repositories.CandidateDocumentOsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * ----------------------------------------------------------------------------
@@ -21,46 +31,121 @@ import java.util.List;
 @Slf4j
 public class CandidateDocumentOsService {
 
-    private final CarDocumentOsRepository carDocumentOsRepository;
+    private final CandidateDocumentOsRepository repository;
 
     @Value("${app.upload.candidate-docs-dir}")
     private String candidateDocsDir;
 
     @Value("${app.upload.candidate-doc-max-size}")
-    private int getMaxFileSize;
-
-    private final int MAX_FILE_SIZE = getMaxFileSize  * 1024 * 1024; // 5 MB
+    private int maxFileSizeMb;
 
     private String normalizeEmailForPath(String email) {
         return email.replace("@", "_at_").replace(".", "_dot_");
     }
 
     private final List<String> ALLOWED_TYPES =
-                List.of("image/jpeg", "image/png", "application/pdf");
+            List.of("image/jpeg", "image/png", "application/pdf");
 
-public uploadCandidateDocument(String candidateEmail, String docType, MultipartFile file) {
 
-    if (candidateEmail == null || candidateEmail.isBlank() || !candidateEmail.contains("@")) {
-        log.error("Invalid candidate email: {}", candidateEmail);
-        throw new IllegalArgumentException("Invalid candidate email");
+    public CandidateDocumentOs uploadCandidateDocument(String candidateEmail, CandidateDocType docType, MultipartFile file) {
+
+        List<String> errors = new ArrayList<>();
+        if (candidateEmail == null || candidateEmail.isBlank()) {
+            errors.add("Email is required");
+        } else if (!candidateEmail.contains("@")) {
+            errors.add("Invalid email format");
+        }
+
+        if (file == null || file.isEmpty()) {
+            errors.add("File is empty");
+        } else {
+            if (file.getSize() > maxFileSizeMb * 1024 * 1024) {
+                errors.add("File size exceeds " + maxFileSizeMb + "MB");
+            }
+        }
+
+        if (file.getContentType() == null || !ALLOWED_TYPES.contains(file.getContentType())) {
+            errors.add("File type not allowed. Allowed: PDF, JPEG, PNG");
+        }
+
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join(", ", errors);
+            log.warn("Upload rejected. Email: {}, File: {}, Reasons: {}",
+                    candidateEmail,
+                    file != null ? file.getOriginalFilename() : "null",
+                    errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        try {
+            Path baseDir = Paths.get(candidateDocsDir);
+            String normalizedEmail = normalizeEmailForPath(candidateEmail);
+            Path targetDir = baseDir.resolve(normalizedEmail.toLowerCase()).resolve(docType.toString().toLowerCase());
+
+            Files.createDirectories(targetDir);
+            log.info("Created directory: {}", targetDir);
+
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || originalFilename.isBlank()) {
+                originalFilename = "unnamed";
+            }
+
+            String safeFilename = originalFilename
+                    .replaceAll("[^a-zA-Z0-9._-]", "_");
+
+            String storedFilename = UUID.randomUUID() + "_" + safeFilename.toLowerCase();
+            Path filePath = targetDir.resolve(storedFilename);
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            CandidateDocumentOs documentOs = new CandidateDocumentOs(
+                    candidateEmail,
+                    docType,
+                    file.getContentType(),
+                    originalFilename,
+                    file.getSize(),
+                    filePath.toString(),
+                    storedFilename
+            );
+            CandidateDocumentOs savedDoc = repository.save(documentOs);
+            log.info("Candidate document with id {} saved for candidate {}", savedDoc.getId(), candidateEmail);
+
+            return savedDoc;
+
+        } catch (IOException exception) {
+            log.error("Error creating directory {}", candidateDocsDir, exception);
+            throw new RuntimeException("Error creating directory " + candidateDocsDir, exception);
+        } catch (NullPointerException exception) {
+            log.error("Error to LowerCase {}", candidateDocsDir, exception);
+            throw new RuntimeException("Error creating directory " + candidateDocsDir, exception);
+        }
     }
 
-    if (file == null || file.isEmpty()) {
-        log.error("File is null or empty");
-        throw new IllegalArgumentException("File is empty");
+    public List<CandidateDocumentOs> getDocumentsByCandidateEmail(String candidateEmail) {
+        return repository.findAllByCandidateEmail(candidateEmail);
     }
 
-    if (file.getSize() > MAX_FILE_SIZE) {
-        log.error("The file is too large: {} bytes", file.getSize());
-        throw new IllegalArgumentException("The file should not exceed " + MAX_FILE_SIZE + " MB");
+    public CandidateDocumentOs getDocumentById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Document not found"));
     }
 
-    if (!ALLOWED_TYPES.contains(file.getContentType())) {
-        log.error("Unsupported file type: {}", file.getContentType());
-        throw new IllegalArgumentException("Only JPG, PNG, and PDF files are allowed");
-    }
+    public void deleteDocument(Long id) {
+        CandidateDocumentOs document = getDocumentById(id);
 
-        return null; // Placeholder return statement
-    }
+        try {
+            Path filePath = Paths.get(document.getStoragePath());
+            Files.deleteIfExists(filePath);
 
+            repository.deleteById(id);
+
+            log.info("Document deleted. ID: {}", id);
+
+        } catch (IOException e) {
+            log.error("Failed to delete file for document ID: {}", id, e);
+            throw new RuntimeException("Failed to delete file", e);
+        }
+    }
 }

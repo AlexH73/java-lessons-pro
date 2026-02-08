@@ -1,16 +1,8 @@
 package de.ait.javalessonspro.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import de.ait.javalessonspro.enums.CandidateDocType;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -22,22 +14,23 @@ import java.time.LocalDateTime;
  * ----------------------------------------------------------------------------
  */
 @Entity
-@Table(name = "candidate_documents")
-@NoArgsConstructor
+@Table(name = "candidate_documents_os")
 @Getter
 @Setter
+@NoArgsConstructor
 public class CandidateDocumentOs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "c_email", nullable = false, unique = true)
+    @Column(name = "c_email", nullable = false)
     private String candidateEmail;
 
+    @NonNull
     @Enumerated(EnumType.STRING)
     @Column(name = "doc_type", nullable = false)
-    private String docType;
+    private CandidateDocType docType;
 
     @Column(name = "orign_filename", nullable = false)
     private String originalFileName;
@@ -57,4 +50,20 @@ public class CandidateDocumentOs {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    public CandidateDocumentOs(String candidateEmail,
+                               CandidateDocType docType,
+                               String contentType,
+                               String originalFileName,
+                               Long size,
+                               String storagePath,
+                               String storedFileName) {
+        this.candidateEmail = candidateEmail;
+        this.docType = docType;
+        this.contentType = contentType;
+        this.createdAt = LocalDateTime.now();
+        this.originalFileName = originalFileName;
+        this.size = size;
+        this.storagePath = storagePath;
+        this.storedFileName = storedFileName;
+    }
 }
