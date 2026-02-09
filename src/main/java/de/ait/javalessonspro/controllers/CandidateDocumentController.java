@@ -64,12 +64,6 @@ public class CandidateDocumentController {
             @RequestParam CandidateDocType docType,
             @RequestParam("file") MultipartFile file) {
 
-        if (file.getOriginalFilename() == null || file.getOriginalFilename().contains("..")) {
-            log.warn("Rejected candidate upload: email={}, docType={}, filename={}, reason={}",
-                    candidateEmail, docType.toString(), file.getOriginalFilename(), "Filename contains '..' or is null");
-            return ResponseEntity.badRequest().body("Filename contains '..' or is null");
-        }
-
         try {
             CandidateDocumentOs saved = service.uploadCandidateDocument(candidateEmail, docType, file);
             log.info("Candidate document with id {} saved for candidate {}", saved.getId(), candidateEmail);
@@ -130,6 +124,27 @@ public class CandidateDocumentController {
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             log.warn("Failed to delete candidate document with id {}: {}", documentId, e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
+            summary = "Delete all candidate documents",
+            description = """
+                Deletes all documents of a candidate by email.
+                Removes both database records and files from file system.
+                """
+    )
+    @DeleteMapping("/documents/os")
+    public ResponseEntity<Void> deleteCandidateDocuments(
+            @RequestParam String email
+    ) {
+        try {
+            service.deleteAllDocumentsByCandidateEmail(email);
+            log.info("All documents deleted for candidate {}", email);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            log.warn("Failed to delete documents for candidate {}: {}", email, e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
