@@ -14,5 +14,6 @@ import java.util.List;
  */
 public interface CandidateDocumentOsRepository extends JpaRepository<CandidateDocumentOs, Long> {
     List<CandidateDocumentOs> findAllByCandidateEmail(String email);
+    long countByCandidateEmail(String email);
     void deleteAllByCandidateEmail(String email);
 }
