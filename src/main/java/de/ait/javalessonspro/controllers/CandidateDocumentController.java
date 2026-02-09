@@ -131,9 +131,9 @@ public class CandidateDocumentController {
     @Operation(
             summary = "Delete all candidate documents",
             description = """
-                Deletes all documents of a candidate by email.
-                Removes both database records and files from file system.
-                """
+                    Deletes all documents of a candidate by email.
+                    Removes both database records and files from file system.
+                    """
     )
     @DeleteMapping("/documents/os")
     public ResponseEntity<Void> deleteCandidateDocuments(

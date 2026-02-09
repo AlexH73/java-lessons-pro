@@ -48,7 +48,7 @@ public class CandidateDocumentOsService {
         return email.replace("@", "_at_").replace(".", "_dot_");
     }
 
-    private static final  Set<String> ALLOWED_TYPES =
+    private static final Set<String> ALLOWED_TYPES =
             Set.of("image/jpeg", "image/png", "application/pdf");
 
     private Path getCandidateDocsRoot() {

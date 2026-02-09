@@ -121,8 +121,8 @@ public class CandidateDocumentControllerIT {
                 .andExpect(status().isCreated())
                 .andExpect(
                         MockMvcResultMatchers
-                        .content()
-                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+                                .content()
+                                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
                 )
                 .andReturn()
                 .getResponse()
