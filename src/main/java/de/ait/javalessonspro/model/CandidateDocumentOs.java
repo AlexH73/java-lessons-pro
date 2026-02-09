@@ -27,7 +27,6 @@ public class CandidateDocumentOs {
     @Column(name = "c_email", nullable = false)
     private String candidateEmail;
 
-    @NonNull
     @Enumerated(EnumType.STRING)
     @Column(name = "doc_type", nullable = false)
     private CandidateDocType docType;
@@ -47,8 +46,13 @@ public class CandidateDocumentOs {
     @Column(name = "storage_path", nullable = false)
     private String storagePath;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     public CandidateDocumentOs(String candidateEmail,
                                CandidateDocType docType,
@@ -60,7 +64,6 @@ public class CandidateDocumentOs {
         this.candidateEmail = candidateEmail;
         this.docType = docType;
         this.contentType = contentType;
-        this.createdAt = LocalDateTime.now();
         this.originalFileName = originalFileName;
         this.size = size;
         this.storagePath = storagePath;
