@@ -20,4 +20,5 @@
     <include file="/db/changelog/012-add-new-column-to-test-drive-bookings.xml"/>
     <include file="/db/changelog/009-create-client-document-db-table.xml"/>
     <include file="/db/changelog/010-create-car-documents-os-table.xml"/>
+    <include file="/db/changelog/011-create-new-table-for-candidate-document-os.xml"/>
 </databaseChangeLog>
