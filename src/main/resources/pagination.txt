@@ -1,0 +1,14 @@
+GET /api/cars?page=0&size=10
+GET /api/cars?page=1&size=10
+GET /api/cars?page=3&size=100
+
+Pageable объект, который описывает как читать/показывать страницу с данными.
+page - номер страницы, начиная с 0
+size - количество элементов на странице
+sort - сортировка (поле + направление), например sort=price,asc или sort=price,desc
+
+Page<CarDto> - объект, который содержит
+список автомобилей на странице
+общее количество элементов (totalElements)
+общее количество страниц (totalPages)
+флаги (first, last)

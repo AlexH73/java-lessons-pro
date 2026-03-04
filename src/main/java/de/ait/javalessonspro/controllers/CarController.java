@@ -1,5 +1,6 @@
 package de.ait.javalessonspro.controllers;
 
+import de.ait.javalessonspro.dto.PageResponse;
 import de.ait.javalessonspro.dto.ValidationErrorResponse;
 import de.ait.javalessonspro.controllers.validation.CarValidator;
 import de.ait.javalessonspro.enums.CarStatus;
@@ -10,7 +11,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,9 +55,17 @@ public class CarController {
             description = "Returns a list of all cars available in the system."
     )
     @GetMapping
-    public ResponseEntity<List<Car>> getAllCars() {
-        log.info("Fetching all cars from the repository");
-        return ResponseEntity.ok(carRepository.findAll());
+    public ResponseEntity<PageResponse<Car>> getAllCars(@ParameterObject @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        log.info("Fetching all cars with pagination: page={}, size={}, sort={}",
+                pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+
+        if (pageable.getPageSize() > 50) {
+            log.warn("Page size is too large: {}", pageable.getPageSize());
+            return ResponseEntity.badRequest().build();
+        }
+        Page<Car> page = carRepository.findAll(pageable);
+        PageResponse<Car> pageResponse = toPageREsponse(page);
+        return ResponseEntity.ok(pageResponse);
     }
 
     @Operation(
@@ -294,6 +307,18 @@ public class CarController {
 
         log.info("Search cars by status: status='{}', found={}", status, cars.size());
         return ResponseEntity.ok(cars);
+    }
+
+    private static PageResponse<Car> toPageREsponse(Page<Car> page) {
+        return new PageResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.isLast(),
+                page.isFirst()
+        );
     }
 
 }
